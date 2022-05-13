@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseAnnotation = exports.analyseDMMF = void 0;
 const client_1 = require("@prisma/client");
 const errors_1 = require("./errors");
-const supportedCursorTypes = ['Int', 'String'];
+const supportedCursorTypes = ['BigInt', 'Int', 'String'];
 function analyseDMMF(dmmf = client_1.Prisma.dmmf) {
     // todo: Make it robust against changes in the DMMF structure
     // (can happen as it's an undocumented API)
