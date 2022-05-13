@@ -21,7 +21,7 @@ export interface DMMFModelDescriptor {
 
 export type DMMFModels = Record<string, DMMFModelDescriptor> // key: model name
 
-const supportedCursorTypes = ['Int', 'String']
+const supportedCursorTypes = ['Int', 'BigInt', 'String']
 
 export function analyseDMMF(dmmf: DMMF = Prisma.dmmf): DMMFModels {
   // todo: Make it robust against changes in the DMMF structure
