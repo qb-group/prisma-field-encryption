@@ -88,6 +88,9 @@ export function encryptOnWrite(
         if (whereClauseRegExp.test(path)) {
           console.warn(warnings.whereClause(operation, path))
         }
+        if (!cloakedStringRegex.test(clearText)) {
+          return
+        }
         try {
           const cipherText = encryptStringSync(clearText, keys.encryptionKey)
           objectPath.set(draft.args, path, cipherText)
