@@ -88,7 +88,7 @@ export function encryptOnWrite(
         if (whereClauseRegExp.test(path)) {
           console.warn(warnings.whereClause(operation, path))
         }
-        if (!cloakedStringRegex.test(clearText)) {
+        if (cloakedStringRegex.test(clearText)) { // do not double encrypt
           return
         }
         try {
