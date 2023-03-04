@@ -49,6 +49,9 @@ function encryptOnWrite(params, keys, models, operation) {
         if (whereClauseRegExp.test(path)) {
             console.warn(errors_1.warnings.whereClause(operation, path));
         }
+        if (cloak_1.cloakedStringRegex.test(clearText)) { // do not double encrypt
+            return;
+        }
         try {
             const cipherText = (0, cloak_1.encryptStringSync)(clearText, keys.encryptionKey);
             object_path_1.default.set(params.args, path, cipherText);
