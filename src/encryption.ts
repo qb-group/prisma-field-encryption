@@ -143,9 +143,18 @@ export function decryptOnRead(
         if (!cloakedStringRegex.test(cipherText)) {
           return
         }
-        const decryptionKey = findKeyForMessage(cipherText, keys.keychain)
-        const clearText = decryptStringSync(cipherText, decryptionKey)
-        objectPath.set(result, path, clearText)
+        const MAX_LOOP_COUNT = 3;
+        let multipleCipherText = cipherText;
+        for (let index = 0; index < MAX_LOOP_COUNT; index++) {
+          const decryptionKey = findKeyForMessage(multipleCipherText, keys.keychain)
+          const clearText = decryptStringSync(multipleCipherText, decryptionKey)
+          if (!cloakedStringRegex.test(clearText)) { // break on clear text
+            objectPath.set(result, path, clearText)
+            break;
+          } else {
+            multipleCipherText = clearText; // continue on cipher text
+          }
+        }
       } catch (error) {
         const message = errors.fieldDecryptionError(model, field, path, error)
         if (fieldConfig.strictDecryption) {

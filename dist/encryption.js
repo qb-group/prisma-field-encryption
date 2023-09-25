@@ -87,9 +87,19 @@ function decryptOnRead(params, result, keys, models, operation) {
             if (!cloak_1.cloakedStringRegex.test(cipherText)) {
                 return;
             }
-            const decryptionKey = (0, cloak_1.findKeyForMessage)(cipherText, keys.keychain);
-            const clearText = (0, cloak_1.decryptStringSync)(cipherText, decryptionKey);
-            object_path_1.default.set(result, path, clearText);
+            const MAX_LOOP_COUNT = 3;
+            let multipleCipherText = cipherText;
+            for (let index = 0; index < MAX_LOOP_COUNT; index++) {
+                const decryptionKey = (0, cloak_1.findKeyForMessage)(multipleCipherText, keys.keychain);
+                const clearText = (0, cloak_1.decryptStringSync)(multipleCipherText, decryptionKey);
+                if (!cloak_1.cloakedStringRegex.test(clearText)) { // break on clear text
+                    object_path_1.default.set(result, path, clearText);
+                    break;
+                }
+                else {
+                    multipleCipherText = clearText; // continue on cipher text
+                }
+            }
         }
         catch (error) {
             const message = errors_1.errors.fieldDecryptionError(model, field, path, error);
